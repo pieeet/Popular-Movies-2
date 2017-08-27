@@ -2,6 +2,7 @@ package com.rocdev.android.popularmovies;
 
 import android.app.LoaderManager;
 import android.content.AsyncTaskLoader;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -28,7 +29,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        LoaderManager.LoaderCallbacks<List<Movie>> {
+        LoaderManager.LoaderCallbacks<List<Movie>>,
+        MoviesAdapter.MoviesAdapterListener {
 
     private static final int LOADER_ID = 4242;
 
@@ -47,14 +49,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initNavigation();
-        if (savedInstanceState != null) {
-            mMovies = savedInstanceState.getParcelableArrayList("movies");
-        }
         getLoaderManager().initLoader(LOADER_ID, null, this);
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rv_gridview);
 //        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
         mRecyclerView.setHasFixedSize(true);
-        mMoviesAdapter = new MoviesAdapter(this);
+        mMoviesAdapter = new MoviesAdapter(this, this);
         mRecyclerView.setAdapter(mMoviesAdapter);
         //TODO make preference
         sortOrder = POPULAR_MOVIES;
@@ -65,6 +64,12 @@ public class MainActivity extends AppCompatActivity
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("movies", mMovies);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mMovies = savedInstanceState.getParcelableArrayList("movies");
     }
 
     private void initNavigation() {
@@ -108,7 +113,6 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -193,4 +197,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void onMovieClicked(Movie movie) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(getString(R.string.key_intent_movie), movie);
+        startActivity(intent);
+    }
 }

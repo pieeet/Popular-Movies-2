@@ -7,4 +7,6 @@
     <string name="action_settings">Settings</string>
     <string name="nav_bar_popular">Popular Movies</string>
     <string name="nav_bar_top_rated">Top rated Movies</string>
+    <string name="title_activity_detail">Movie</string>
+    <string name="key_intent_movie" translatable="false">movie</string>
 </resources>

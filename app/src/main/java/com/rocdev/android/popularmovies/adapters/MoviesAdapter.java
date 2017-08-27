@@ -32,21 +32,23 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     private List<Movie> mMovies;
     private Context mContext;
+    private MoviesAdapterListener mListener;
 
-    public MoviesAdapter(Context context) {
+    public MoviesAdapter(Context context, MoviesAdapterListener listener) {
         this.mContext = context;
+        this.mListener = listener;
     }
 
     @Override
     public MoviesAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View thumbView = inflater.inflate(R.layout.poster_thumb, parent,false);
+        View thumbView = inflater.inflate(R.layout.poster_thumb, parent, false);
         return new MoviesAdapterViewHolder(thumbView);
     }
 
     @Override
     public void onBindViewHolder(MoviesAdapterViewHolder holder, int position) {
-        Movie movie = mMovies.get(position);
+        final Movie movie = mMovies.get(position);
         String url = BASE_URL_POSTER + WIDTH_POSTER_W185 + movie.getPosterPath();
         Picasso.with(mContext).load(url).into(holder.imageView);
     }
@@ -62,12 +64,25 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         notifyDataSetChanged();
     }
 
-    static class MoviesAdapterViewHolder extends RecyclerView.ViewHolder {
+    class MoviesAdapterViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
+
         ImageView imageView;
 
         MoviesAdapterViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.iv_poster_thumb);
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            Movie movie = mMovies.get(getAdapterPosition());
+            mListener.onMovieClicked(movie);
+        }
+    }
+
+    public interface MoviesAdapterListener {
+        void onMovieClicked(Movie movie);
     }
 }

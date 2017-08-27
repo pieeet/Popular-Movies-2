@@ -12,4 +12,5 @@
     <dimen name="column_width">100dp</dimen>
     <dimen name="progress_bar_width">42dp</dimen>
     <dimen name="progress_bar_height">42dp</dimen>
+    <dimen name="detail_title_textsize">40sp</dimen>
 </resources>
