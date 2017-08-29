@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.constraint.ConstraintLayout
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -14,7 +13,7 @@
 
         <TextView
             android:id="@+id/tv_title"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:padding="18dp"
@@ -24,5 +23,58 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Film title" />
+
+        <ImageView
+            android:id="@+id/iv_poster"
+            android:layout_width="120dp"
+            android:layout_height="180dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorPrimary"
+            android:contentDescription="@string/content_description_poster"
+            app:layout_constraintLeft_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+        <!--<CheckBox-->
+            <!--android:id="@+id/cb_favourite"-->
+            <!--style="?android:attr/starStyle"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="20dp"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:layout_marginStart="20dp"-->
+            <!--android:textColor="@color/colorPrimary"-->
+            <!--android:textSize="20sp"-->
+            <!--android:text="Add to favourites"-->
+            <!--app:layout_constraintBottom_toTopOf="@+id/tv_year"-->
+            <!--app:layout_constraintLeft_toRightOf="@+id/iv_poster" />-->
+
+        <TextView
+            android:id="@+id/tv_year"
+            style="@style/movieInfoItem"
+            android:text="year text"
+            app:layout_constraintBottom_toTopOf="@+id/tv_voteAverage"
+            app:layout_constraintLeft_toRightOf="@+id/iv_poster" />
+
+        <TextView
+            android:id="@+id/tv_voteAverage"
+            style="@style/movieInfoItem"
+            android:layout_marginBottom="0dp"
+            android:text="vote average: 4.5"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_poster"
+            app:layout_constraintLeft_toRightOf="@+id/iv_poster" />
+
+        <TextView
+            android:id="@+id/tv_synopsis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Lorum ipsum"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_poster" />
+
     </android.support.constraint.ConstraintLayout>
 </layout>

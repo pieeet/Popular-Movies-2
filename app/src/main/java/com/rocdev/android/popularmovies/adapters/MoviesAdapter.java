@@ -13,6 +13,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import static com.rocdev.android.popularmovies.DetailActivity.BASE_URL_POSTER;
+import static com.rocdev.android.popularmovies.DetailActivity.WIDTH_POSTER_W185;
+
 /**
  * Created by piet on 25-08-17.
  *
@@ -20,15 +23,6 @@ import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
-    private static final String BASE_URL_POSTER = "http://image.tmdb.org/t/p";
-    // you can request different img width in tmdb. Uncomment the one needed
-//    private static final String WIDTH_POSTER_W92 = "/w92";
-//    private static final String WIDTH_POSTER_W154 = "/w154";
-    private static final String WIDTH_POSTER_W185 = "/w185";
-//    private static final String WIDTH_POSTER_W342 = "/w342";
-//    private static final String WIDTH_POSTER_W500 = "/w500";
-//    private static final String WIDTH_POSTER_W780 = "/w780";
-//    private static final String WIDTH_POSTER_ORIG = "/original";
 
     private List<Movie> mMovies;
     private Context mContext;

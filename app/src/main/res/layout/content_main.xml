@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.rocdev.android.popularmovies.MainActivity"
-    tools:showIn="@layout/app_bar_main"
-    android:background="@color/colorPrimaryDark">
+    tools:showIn="@layout/app_bar_main">
 
     <com.rocdev.android.popularmovies.customviews.AutoFitRecyclerView
         android:id="@+id/rv_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:columnWidth="@dimen/column_width"/>
+        android:columnWidth="@dimen/column_width" />
 
     <!-- A progress bar that will be shown to users to indicate that data is loading -->
     <ProgressBar
@@ -21,6 +21,16 @@
         android:layout_width="@dimen/progress_bar_width"
         android:layout_height="@dimen/progress_bar_height"
         android:layout_gravity="center"
-        android:visibility="invisible" />
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_no_network"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_network"
+        android:textColor="@color/text_color_light"
+        android:textSize="20sp"
+        android:visibility="gone" />
 
 </FrameLayout>

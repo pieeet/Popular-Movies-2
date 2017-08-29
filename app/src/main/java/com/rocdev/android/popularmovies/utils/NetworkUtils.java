@@ -1,7 +1,6 @@
 package com.rocdev.android.popularmovies.utils;
 
 import android.net.Uri;
-import android.util.Log;
 
 import com.rocdev.android.popularmovies.MainActivity;
 import com.rocdev.android.popularmovies.secret.ApiKey;
@@ -15,6 +14,7 @@ import java.util.Scanner;
 
 /**
  * Created by piet on 25-08-17.
+ *
  */
 
 public class NetworkUtils {
@@ -22,7 +22,8 @@ public class NetworkUtils {
     private static final String BASE_URL_POPULAR = "http://api.themoviedb.org/3/movie/popular";
     private static final String BASE_URL_TOP_RATED = "http://api.themoviedb.org/3/movie/top_rated";
     private static final String PARAM_NAME_API_KEY = "api_key";
-    private static final String LOG_TAG = NetworkUtils.class.getSimpleName();
+    //TODO replace with your api-key
+    private static final String API_KEY = ApiKey.getApiKey();
 
 
 
@@ -40,9 +41,8 @@ public class NetworkUtils {
         }
         Uri builtUri = Uri.parse(baseUrl)
                 .buildUpon()
-                .appendQueryParameter(PARAM_NAME_API_KEY, ApiKey.getApiKey())
+                .appendQueryParameter(PARAM_NAME_API_KEY, API_KEY)
                 .build();
-        Log.i(LOG_TAG, builtUri.toString());
         URL url = new URL(builtUri.toString());
 
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();

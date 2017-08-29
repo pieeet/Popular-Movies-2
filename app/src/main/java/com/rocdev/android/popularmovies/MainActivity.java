@@ -2,7 +2,10 @@ package com.rocdev.android.popularmovies;
 
 import android.app.LoaderManager;
 import android.content.AsyncTaskLoader;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -13,8 +16,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.rocdev.android.popularmovies.adapters.MoviesAdapter;
 import com.rocdev.android.popularmovies.models.Movie;
@@ -26,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         LoaderManager.LoaderCallbacks<List<Movie>>,
@@ -34,42 +40,39 @@ public class MainActivity extends AppCompatActivity
 
     private static final int LOADER_ID = 4242;
 
-//    private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
 
     public static final int POPULAR_MOVIES = 0;
     public static final int TOP_RATED_MOVIES = 1;
 
     private MoviesAdapter mMoviesAdapter;
-//    private ProgressBar mLoadingIndicator;
+    private ProgressBar mLoadingIndicator;
+    private TextView mNoNetworkWarning;
     private ArrayList<Movie> mMovies;
-    private int sortOrder;
+    private int mSortOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initNavigation();
-        getLoaderManager().initLoader(LOADER_ID, null, this);
-        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rv_gridview);
-//        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-        mRecyclerView.setHasFixedSize(true);
         mMoviesAdapter = new MoviesAdapter(this, this);
-        mRecyclerView.setAdapter(mMoviesAdapter);
+        initViews();
         //TODO make preference
-        sortOrder = POPULAR_MOVIES;
+        mSortOrder = POPULAR_MOVIES;
         setTitleActionBar();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("movies", mMovies);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mMovies = savedInstanceState.getParcelableArrayList("movies");
+        if (savedInstanceState == null) {
+            if (checkConnection()) {
+                mNoNetworkWarning.setVisibility(View.GONE);
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+                getLoaderManager().initLoader(LOADER_ID, null, this);
+            } else {
+                mNoNetworkWarning.setVisibility(View.VISIBLE);
+            }
+        } else {
+            mMovies = savedInstanceState.getParcelableArrayList("movies");
+            mMoviesAdapter.notifyMoviesChanged(mMovies);
+        }
     }
 
     private void initNavigation() {
@@ -82,8 +85,25 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().getItem(sortOrder).setChecked(true);
+        navigationView.getMenu().getItem(mSortOrder).setChecked(true);
     }
+
+    private void initViews() {
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rv_gridview);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mMoviesAdapter);
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+        mNoNetworkWarning = (TextView) findViewById(R.id.tv_no_network);
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("movies", mMovies);
+    }
+
+
 
     @Override
     public void onBackPressed() {
@@ -109,7 +129,6 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -121,16 +140,14 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_popular) {
-            if (sortOrder != POPULAR_MOVIES) {
-                sortOrder = POPULAR_MOVIES;
-                mMoviesAdapter.notifyMoviesChanged(null);
-                getLoaderManager().restartLoader(LOADER_ID, null, this);
+            if (mSortOrder != POPULAR_MOVIES) {
+                mSortOrder = POPULAR_MOVIES;
+                updateMovies();
             }
         } else if (id == R.id.nav_top) {
-            if (sortOrder != TOP_RATED_MOVIES) {
-                sortOrder = TOP_RATED_MOVIES;
-                mMoviesAdapter.notifyMoviesChanged(null);
-                getLoaderManager().restartLoader(LOADER_ID, null, this);
+            if (mSortOrder != TOP_RATED_MOVIES) {
+                mSortOrder = TOP_RATED_MOVIES;
+                updateMovies();
             }
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -139,13 +156,29 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    private void updateMovies() {
+        mMoviesAdapter.notifyMoviesChanged(null);
+        if (checkConnection()) {
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+            getLoaderManager().restartLoader(LOADER_ID, null, this);
+        } else {
+            mNoNetworkWarning.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    private boolean checkConnection() {
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
     @SuppressWarnings("ConstantConditions")
     private void setTitleActionBar() {
 
-        if (sortOrder == POPULAR_MOVIES) {
+        if (mSortOrder == POPULAR_MOVIES) {
             getSupportActionBar().setTitle(getString(R.string.nav_bar_popular));
-        }
-        else if (sortOrder == TOP_RATED_MOVIES) {
+        } else if (mSortOrder == TOP_RATED_MOVIES) {
             getSupportActionBar().setTitle(getString(R.string.nav_bar_top_rated));
         }
     }
@@ -160,7 +193,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public List<Movie> loadInBackground() {
                 try {
-                    String moviesJsonString = NetworkUtils.getMoviesJson(sortOrder);
+                    String moviesJsonString = NetworkUtils.getMoviesJson(mSortOrder);
                     return JsonUtils.extractMoviesFromJson(moviesJsonString);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -187,8 +220,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoadFinished(android.content.Loader<List<Movie>> loader, List<Movie> movies) {
+        mMoviesAdapter.notifyMoviesChanged(movies);
         mMovies = (ArrayList<Movie>) movies;
-        mMoviesAdapter.notifyMoviesChanged(mMovies);
+        mLoadingIndicator.setVisibility(View.GONE);
     }
 
     @Override
