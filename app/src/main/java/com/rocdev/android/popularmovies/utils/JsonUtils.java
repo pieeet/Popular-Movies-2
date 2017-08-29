@@ -16,7 +16,6 @@ import java.util.List;
 
 public class JsonUtils {
 
-
     private static final String KEY_RESULTS = "results";
     private static final String KEY_POSTER_PATH = "poster_path";
     private static final String KEY_OVERVIEW = "overview";
