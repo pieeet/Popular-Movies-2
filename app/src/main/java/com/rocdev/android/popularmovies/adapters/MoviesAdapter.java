@@ -2,6 +2,7 @@ package com.rocdev.android.popularmovies.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +25,11 @@ import static com.rocdev.android.popularmovies.DetailActivity.WIDTH_POSTER_W185;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
 
+    private static final String LOG_TAG = MoviesAdapter.class.getSimpleName();
+
     private List<Movie> mMovies;
-    private Context mContext;
-    private MoviesAdapterListener mListener;
+    private final Context mContext;
+    private final MoviesAdapterListener mListener;
 
     public MoviesAdapter(Context context, MoviesAdapterListener listener) {
         this.mContext = context;
@@ -55,13 +58,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     public void notifyMoviesChanged(List<Movie> movies) {
         mMovies = movies;
+
         notifyDataSetChanged();
     }
 
     class MoviesAdapterViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
-        ImageView imageView;
+        final ImageView imageView;
 
         MoviesAdapterViewHolder(View itemView) {
             super(itemView);

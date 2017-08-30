@@ -16,7 +16,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final int LOADER_ID = 4242;
 
-    private final String LOG_TAG = MainActivity.class.getSimpleName();
+//    private final String LOG_TAG = MainActivity.class.getSimpleName();
 
     public static final int POPULAR_MOVIES = 0;
     public static final int TOP_RATED_MOVIES = 1;
@@ -50,29 +49,24 @@ public class MainActivity extends AppCompatActivity
     private TextView mNoNetworkWarning;
     private ArrayList<Movie> mMovies;
     private int mSortOrder;
+    private boolean isPaused;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initNavigation();
-        mMoviesAdapter = new MoviesAdapter(this, this);
         initViews();
-        //TODO make preference
-        mSortOrder = POPULAR_MOVIES;
-        setTitleActionBar();
-        if (savedInstanceState == null) {
-            if (checkConnection()) {
-                mNoNetworkWarning.setVisibility(View.GONE);
-                mLoadingIndicator.setVisibility(View.VISIBLE);
-                getLoaderManager().initLoader(LOADER_ID, null, this);
-            } else {
-                mNoNetworkWarning.setVisibility(View.VISIBLE);
-            }
+        setInstanceState(savedInstanceState);
+        if (checkConnection()) {
+            mNoNetworkWarning.setVisibility(View.GONE);
         } else {
-            mMovies = savedInstanceState.getParcelableArrayList("movies");
-            mMoviesAdapter.notifyMoviesChanged(mMovies);
+            mNoNetworkWarning.setVisibility(View.VISIBLE);
+            mMoviesAdapter.notifyMoviesChanged(null);
         }
+        getLoaderManager().initLoader(LOADER_ID, null, this);
+        setTitleActionBar();
+        isPaused = false;
     }
 
     private void initNavigation() {
@@ -91,18 +85,62 @@ public class MainActivity extends AppCompatActivity
     private void initViews() {
         RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.rv_gridview);
         mRecyclerView.setHasFixedSize(true);
+        mMoviesAdapter = new MoviesAdapter(this, this);
         mRecyclerView.setAdapter(mMoviesAdapter);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
         mNoNetworkWarning = (TextView) findViewById(R.id.tv_no_network);
     }
 
+    private void setInstanceState(Bundle instanceState) {
+        if (instanceState == null) {
+            //TODO make preference
+            mSortOrder = POPULAR_MOVIES;
+        } else {
+            mSortOrder = instanceState.getInt(getString(R.string.key_sortOrder));
+            if (checkConnection()) {
+                mMovies = instanceState.getParcelableArrayList(getString(R.string.key_movies));
+            }
+        }
+    }
+
+
+    //if user after no network returns to app it should check if connection is re-established
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isPaused) {
+            if (checkConnection()) {
+                mNoNetworkWarning.setVisibility(View.GONE);
+                getLoaderManager().initLoader(LOADER_ID, null, this);
+            } else {
+                mMoviesAdapter.notifyMoviesChanged(null);
+                mNoNetworkWarning.setVisibility(View.VISIBLE);
+                mLoadingIndicator.setVisibility(View.GONE);
+            }
+        }
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("movies", mMovies);
+        outState.putParcelableArrayList(getString(R.string.key_movies), mMovies);
+        outState.putInt(getString(R.string.key_sortOrder), mSortOrder);
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (!checkConnection()) {
+            mMoviesAdapter.notifyMoviesChanged(null);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isPaused = true;
+
+    }
 
 
     @Override
@@ -129,10 +167,7 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -159,7 +194,6 @@ public class MainActivity extends AppCompatActivity
     private void updateMovies() {
         mMoviesAdapter.notifyMoviesChanged(null);
         if (checkConnection()) {
-            mLoadingIndicator.setVisibility(View.VISIBLE);
             getLoaderManager().restartLoader(LOADER_ID, null, this);
         } else {
             mNoNetworkWarning.setVisibility(View.VISIBLE);
@@ -175,7 +209,6 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("ConstantConditions")
     private void setTitleActionBar() {
-
         if (mSortOrder == POPULAR_MOVIES) {
             getSupportActionBar().setTitle(getString(R.string.nav_bar_popular));
         } else if (mSortOrder == TOP_RATED_MOVIES) {
@@ -187,7 +220,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Loader<List<Movie>> onCreateLoader(int i, Bundle bundle) {
         return new AsyncTaskLoader<List<Movie>>(this) {
-
             ArrayList<Movie> movies;
 
             @Override
@@ -203,6 +235,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             protected void onStartLoading() {
+                mLoadingIndicator.setVisibility(View.VISIBLE);
                 if (movies == null) {
                     forceLoad();
                 } else {

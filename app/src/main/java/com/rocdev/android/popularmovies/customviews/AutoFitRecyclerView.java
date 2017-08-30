@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 /**
  * Created by piet on 26-08-17.
  * A custom RecyclerView for no of colums to fit screen
- * https://github.com/vickyvu0684/android-recycleview-autofit
+ * from: https://github.com/vickyvu0684/android-recycleview-autofit
  */
 
 public class AutoFitRecyclerView extends RecyclerView {

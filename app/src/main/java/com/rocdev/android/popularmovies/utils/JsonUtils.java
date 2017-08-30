@@ -35,7 +35,6 @@ public class JsonUtils {
                 String posterPath = movieJSON.getString(KEY_POSTER_PATH);
                 String overview = movieJSON.getString(KEY_OVERVIEW);
                 String releaseDate = movieJSON.getString(KEY_RELEASE_DATE);
-                int id = movieJSON.getInt(KEY_ID);
                 String originalTitle = movieJSON.getString(KEY_ORIGINAL_TITLE);
                 double voteAverage = movieJSON.getDouble(KEY_VOTE_AVERAGE);
                 movies.add(new Movie(

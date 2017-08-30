@@ -2,9 +2,7 @@ package com.rocdev.android.popularmovies.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 
-import java.util.List;
 
 /**
  * Created by piet on 25-08-17.
@@ -13,11 +11,11 @@ import java.util.List;
 
 public class Movie implements Parcelable {
 
-    private String originalTitle;
-    private String posterPath;
-    private String overView;
-    private double voteAverage;
-    private String releaseDate;
+    private final String originalTitle;
+    private final String posterPath;
+    private final String overView;
+    private final double voteAverage;
+    private final String releaseDate;
 
     public Movie(String originalTitle, String posterPath, String overView, double voteAverage,
                  String releaseDate) {
@@ -48,7 +46,7 @@ public class Movie implements Parcelable {
         return releaseDate;
     }
 
-    protected Movie(Parcel in) {
+    private Movie(Parcel in) {
         originalTitle = in.readString();
         posterPath = in.readString();
         overView = in.readString();
