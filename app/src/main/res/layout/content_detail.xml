@@ -10,7 +10,7 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:context="com.rocdev.android.popularmovies.DetailActivity"
             tools:showIn="@layout/activity_detail">
@@ -50,7 +50,6 @@
             <TextView
                 android:id="@+id/tv_voteAverage"
                 style="@style/movieInfoItem"
-                android:layout_marginBottom="0dp"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_poster"
                 app:layout_constraintLeft_toRightOf="@+id/iv_poster"
                 tools:text="vote average: 4.5" />
@@ -62,10 +61,41 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:textSize="16sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_poster"
-                tools:text="Lorum ipsum"
-                android:textSize="16sp"/>
+                tools:text="Lorum ipsum" />
+
+            <ImageView
+                android:id="@+id/separator"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorPrimaryDark"
+                app:layout_constraintTop_toBottomOf="@+id/tv_synopsis"
+                app:layout_constraintLeft_toRightOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/section_trailer_separator" />
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/separator"
+                app:layout_constraintLeft_toRightOf="parent"
+                android:text="@string/trailers_label"
+                android:textSize="20sp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"/>
+
+            <LinearLayout
+                android:id="@+id/ll_trailers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/tv_synopsis"
+                app:layout_constraintLeft_toRightOf="parent"
+                app:layout_constraintRight_toLeftOf="parent"/>
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

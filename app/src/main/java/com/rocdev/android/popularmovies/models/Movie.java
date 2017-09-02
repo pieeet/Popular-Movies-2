@@ -1,8 +1,8 @@
 package com.rocdev.android.popularmovies.models;
 
+
 import android.os.Parcel;
 import android.os.Parcelable;
-
 
 /**
  * Created by piet on 25-08-17.
@@ -11,19 +11,30 @@ import android.os.Parcelable;
 
 public class Movie implements Parcelable {
 
+    private final int movieId;
     private final String originalTitle;
     private final String posterPath;
     private final String overView;
     private final double voteAverage;
     private final String releaseDate;
 
-    public Movie(String originalTitle, String posterPath, String overView, double voteAverage,
-                 String releaseDate) {
+    public Movie(
+            int movieId,
+            String originalTitle,
+            String posterPath,
+            String overView,
+            double voteAverage,
+            String releaseDate) {
+        this.movieId = movieId;
         this.originalTitle = originalTitle;
         this.posterPath = posterPath;
         this.overView = overView;
         this.voteAverage = voteAverage;
         this.releaseDate = releaseDate;
+    }
+
+    public int getMovieId() {
+        return movieId;
     }
 
     public String getOriginalTitle() {
@@ -46,7 +57,9 @@ public class Movie implements Parcelable {
         return releaseDate;
     }
 
-    private Movie(Parcel in) {
+
+    protected Movie(Parcel in) {
+        movieId = in.readInt();
         originalTitle = in.readString();
         posterPath = in.readString();
         overView = in.readString();
@@ -61,6 +74,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(movieId);
         dest.writeString(originalTitle);
         dest.writeString(posterPath);
         dest.writeString(overView);

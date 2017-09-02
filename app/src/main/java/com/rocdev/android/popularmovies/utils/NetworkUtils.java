@@ -11,6 +11,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+import static android.R.attr.y;
+
 
 /**
  * Created by piet on 25-08-17.
@@ -21,6 +23,7 @@ public class NetworkUtils {
 
     private static final String BASE_URL_POPULAR = "http://api.themoviedb.org/3/movie/popular";
     private static final String BASE_URL_TOP_RATED = "http://api.themoviedb.org/3/movie/top_rated";
+    private static final String BASE_URL_TRAILERS = "http://api.themoviedb.org/3/movie/";
     private static final String PARAM_NAME_API_KEY = "api_key";
     //TODO replace with your api-key
     private static final String API_KEY = ApiKey.getApiKey();
@@ -39,12 +42,22 @@ public class NetworkUtils {
         } else if (sortOrder == MainActivity.TOP_RATED_MOVIES) {
             baseUrl = BASE_URL_TOP_RATED;
         }
+        return getNetworkResponse(baseUrl);
+    }
+
+
+    public static String getTrailersJson(int movieId) throws IOException {
+        String baseUrl = BASE_URL_TRAILERS  + movieId + "/videos";
+        return getNetworkResponse(baseUrl);
+    }
+
+
+    private static String getNetworkResponse(String baseUrl) throws IOException {
         Uri builtUri = Uri.parse(baseUrl)
                 .buildUpon()
                 .appendQueryParameter(PARAM_NAME_API_KEY, API_KEY)
                 .build();
         URL url = new URL(builtUri.toString());
-
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
             InputStream in = urlConnection.getInputStream();

@@ -14,4 +14,7 @@
     <string name="avg_vote_prefix">Vote average: </string>
     <string name="key_sortOrder">sortOrder</string>
     <string name="key_movies">movies</string>
+    <string name="play_icon">play icon</string>
+    <string name="trailers_label">Trailers:</string>
+    <string name="section_trailer_separator">separator</string>
 </resources>
