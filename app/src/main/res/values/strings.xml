@@ -17,4 +17,5 @@
     <string name="play_icon">play icon</string>
     <string name="trailers_label">Trailers:</string>
     <string name="section_trailer_separator">separator</string>
+    <string name="reviews_label">Reviews:</string>
 </resources>

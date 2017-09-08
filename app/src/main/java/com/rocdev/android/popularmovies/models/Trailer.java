@@ -10,6 +10,8 @@ import android.os.Parcelable;
 
 public class Trailer implements Parcelable {
 
+    private static final String BASE_URL_YOUTUBE = "https://www.youtube.com/watch?v=";
+
     private String key;
     private String site;
     private String type;
@@ -40,7 +42,7 @@ public class Trailer implements Parcelable {
     }
 
     public String getYouTubeUrl() {
-        return "https://www.youtube.com/watch?v=" + key;
+        return BASE_URL_YOUTUBE + key;
     }
 
     protected Trailer(Parcel in) {

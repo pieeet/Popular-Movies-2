@@ -1,6 +1,7 @@
 package com.rocdev.android.popularmovies.utils;
 
 import com.rocdev.android.popularmovies.models.Movie;
+import com.rocdev.android.popularmovies.models.Review;
 import com.rocdev.android.popularmovies.models.Trailer;
 
 import org.json.JSONArray;
@@ -28,6 +29,8 @@ public class JsonUtils {
     private static final String KEY_TRAILER_SITE = "site";
     private static final String KEY_TRAILER_TYPE = "type";
     private static final String KEY_TRAILER_NAME = "name";
+    private static final String KEY_AUTHOR = "author";
+    private static final String KEY_CONTENT = "content";
 
 
     public static List<Movie> extractMoviesFromJson(String jsonString) {
@@ -84,6 +87,23 @@ public class JsonUtils {
             e.printStackTrace();
         }
         return  trailers;
+    }
+
+    public static List<Review> getReviewsFromJson(final String jsonString) {
+        List<Review> reviews = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            JSONArray results = jsonObject.getJSONArray(KEY_RESULTS);
+            for (int i = 0; i < results.length(); i++) {
+                JSONObject review = results.getJSONObject(i);
+                String author = review.getString(KEY_AUTHOR);
+                String content = review.getString(KEY_CONTENT);
+                reviews.add(new Review(author, content));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return reviews;
     }
 
 }
