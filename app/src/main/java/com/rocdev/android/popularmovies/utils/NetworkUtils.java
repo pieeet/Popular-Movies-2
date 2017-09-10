@@ -29,7 +29,7 @@ public class NetworkUtils {
     //TODO replace with your api-key
     private static final String API_KEY = ApiKey.getApiKey();
 
-    private static final String LOG_TAG = NetworkUtils.class.getSimpleName();
+//    private static final String LOG_TAG = NetworkUtils.class.getSimpleName();
 
 
 
@@ -56,7 +56,6 @@ public class NetworkUtils {
 
     public static String getReviewsJson(int movieId) throws IOException {
         String baseUrl = BASE_URL + movieId + PATH_REVIEWS;
-
         return getNetworkResponse(baseUrl);
     }
 
@@ -66,26 +65,20 @@ public class NetworkUtils {
                 .buildUpon()
                 .appendQueryParameter(PARAM_NAME_API_KEY, API_KEY)
                 .build();
-        Log.i(LOG_TAG, builtUri.toString());
         URL url = new URL(builtUri.toString());
+        String response = "";
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
             InputStream in = urlConnection.getInputStream();
             Scanner scanner = new Scanner(in);
             scanner.useDelimiter("\\A");
-            String response = null;
             if (scanner.hasNext()) {
                 response = scanner.next();
             }
             scanner.close();
-            return response;
         } finally {
             urlConnection.disconnect();
         }
+        return response;
     }
-
-
-
-
-
 }

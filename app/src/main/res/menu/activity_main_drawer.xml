@@ -10,6 +10,10 @@
             android:id="@+id/nav_top"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/nav_bar_top_rated" />
+        <item
+            android:id="@+id/nav_saved"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/nav_bar_saved_movies" />
 
     </group>
 

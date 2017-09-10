@@ -43,6 +43,18 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
+                <CheckBox
+                    android:id="@+id/cb_save_movie"
+                    style="?android:attr/starStyle"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20sp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_year"
+                    app:layout_constraintLeft_toLeftOf="@+id/tv_year"
+                    android:text="@string/favorite_movie"/>
+
                 <TextView
                     android:id="@+id/tv_year"
                     style="@style/movieInfoItem"
@@ -89,12 +101,29 @@
                 style="@style/label"
                 android:text="@string/trailers_label" />
 
-            <LinearLayout
-                android:id="@+id/ll_trailers"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="vertical" />
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:id="@+id/pb_trailer_loader"
+                    android:layout_width="@dimen/progress_bar_width"
+                    android:layout_height="@dimen/progress_bar_width"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone" />
+                <TextView
+                    style="@style/noDataAvailable"
+                    android:id="@+id/tv_no_trailers"
+                    android:text="@string/no_trailers_loaded" />
+                <LinearLayout
+                    android:id="@+id/ll_trailers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical" />
+            </FrameLayout>
+
+
 
             <ImageView
                 android:id="@+id/review_separator"
@@ -109,12 +138,31 @@
                 style="@style/label"
                 android:text="@string/reviews_label" />
 
-            <LinearLayout
-                android:id="@+id/ll_reviews"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="vertical" />
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:id="@+id/pb_review_loader"
+                    android:layout_width="@dimen/progress_bar_width"
+                    android:layout_height="@dimen/progress_bar_width"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone" />
+
+                <TextView
+                    style="@style/noDataAvailable"
+                    android:id="@+id/tv_no_reviews"
+                    android:text="@string/no_reviews_available" />
+
+                <LinearLayout
+                    android:id="@+id/ll_reviews"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical" />
+            </FrameLayout>
+
+
 
         </LinearLayout>
 
