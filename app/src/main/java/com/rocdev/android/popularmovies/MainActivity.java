@@ -19,7 +19,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity
         }
         getLoaderManager().initLoader(LOADER_ID, null, this);
         setTitleActionBar();
-        setObserver();
+        setContentObserver();
         isPaused = false;
     }
 
@@ -112,7 +111,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void setObserver() {
+    private void setContentObserver() {
         mObserver = new SavedMoviesObserver(new Handler());
         Uri uri = Uri.parse(MoviesContract.MovieEntry.CONTENT_URI.toString() + "/#");
         getContentResolver().registerContentObserver(uri, true, mObserver);

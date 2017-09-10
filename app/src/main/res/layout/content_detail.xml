@@ -86,7 +86,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/iv_poster"
                     tools:text="Lorum ipsum" />
 
-
             </android.support.constraint.ConstraintLayout>
 
             <ImageView
@@ -161,8 +160,6 @@
                     android:layout_marginTop="8dp"
                     android:orientation="vertical" />
             </FrameLayout>
-
-
 
         </LinearLayout>
 
